@@ -32,7 +32,7 @@
 
 <script>
 import { app as firebaseApp } from "../firebase/firebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 export default {
   data() {
     return {
@@ -46,8 +46,14 @@ export default {
     signin() {
       const auth = getAuth(firebaseApp);
       signInWithEmailAndPassword(auth, this.user.email, this.user.password)
-        .then(() => {
-          this.$router.push("/manage");
+        .then((user) => {
+         onAuthStateChanged(auth , (user)=>{
+           if(user){
+             localStorage.setItem("uid",user.uid)
+             localStorage.setItem("login",true)
+             console.log(user);
+           }
+         })
         })
         .catch((error) => {
           const errorCode = error.code;

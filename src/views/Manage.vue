@@ -1,20 +1,44 @@
 <template>
   <div>
-    <div class="d-flex justify-content-end me-5">
-      <button class="btn btn-primary" title="addUser" @click="toAdd">
+    <div class="d-flex justify-content-between mx-5 mt-3">
+      <div>
+        <input type="text" placeholder="search by position" v-model="jobPosition">
+        <button class="btn btn-primary" @click="search">search</button>
+        {{jobPosition}}
+      </div>
+      <div>
+        <p>Total Employee --></p>
+      </div>
+      <div>
+        <button class="btn btn-primary" title="addUser" @click="toAdd">
         <i class="fas fs-3 fa-user-plus"></i>
       </button>
       <button class="btn btn-danger ms-2" title="deleteAll" @click="deleteAll">
         <i class="fas fa-trash-alt me-2"></i>Delete All
       </button>
+      </div>
     </div>
+    
     <List :employee_list="employee_list" @delete="deletee($event)"></List>
+
+    <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a class="page-link"><i class="fas fa-backward"></i></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="#"><i class="fas fa-forward"></i></a>
+    </li>
+  </ul>
+</nav>
+
   </div>
 </template>
 
 <script>
 import List from "../components/List";
 import axios from "axios";
+
 export default {
   components: {
     List,
@@ -22,12 +46,13 @@ export default {
   data() {
     return {
       employee_list: [],
+      jobPosition:""
     };
   },
   methods: {
     deleteAll() {
       axios
-        .delete("https://testing-api-mock.herokuapp.com/users")
+        .delete("")
         .then(() => {
           this.employee_list = []
         })
@@ -44,10 +69,20 @@ export default {
     toAdd() {
       this.$router.push("/add");
     },
+    search(){
+      axios.get("https://testing-api-mock.herokuapp.com/users?jobPosition="+this.jobPosition)
+      .then((data)=>{
+        console.log(data.data.results);
+        this.employee_list = data.data.results
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
   },
   mounted() {
     axios
-      .get("https://testing-api-mock.herokuapp.com/users")
+      .get("https://testing-api-mock.herokuapp.com/users?page=1?size=1")
       .then((res) => {
         console.log(res.data.results);
         return res.data.results;

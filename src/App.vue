@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div id="nav" class="text-center">
       <router-link to="/"><i class="fas fa-home"></i>Home</router-link> |
       <router-link to="/manage"><i class="fas fa-cog"></i>Management</router-link> |
       <router-link to="/signin">SignIn</router-link> |
       <router-link to="/signup">Signup</router-link> |
-      <button class="btn btn-link mb-1" @click="signout"><i class="fas fa-sign-out-alt"></i>SignOut</button>
+      <button v-if="show" class="btn btn-link mb-1" @click="signout"><i class="fas fa-sign-out-alt"></i>SignOut</button>
       
     </div>
     <router-view/>
@@ -15,6 +15,11 @@
 import { app as firebaseApp } from "./firebase/firebase";
 import { getAuth, signOut } from "firebase/auth";
 export default {
+  data(){
+    return{
+      show:true
+    }
+  },
   methods:{
     toview(emp){
       this.singleEmp = emp
