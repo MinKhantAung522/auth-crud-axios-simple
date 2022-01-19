@@ -21,16 +21,9 @@
     
     <List :employee_list="employee_list" @delete="deletee($event)"></List>
 
-    <nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item">
-      <a class="page-link"><i class="fas fa-backward"></i></a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="#"><i class="fas fa-forward"></i></a>
-    </li>
-  </ul>
-</nav>
+    <button @click="page++" :page="page"> add</button>
+
+    {{page}}
 
   </div>
 </template>
@@ -46,8 +39,18 @@ export default {
   data() {
     return {
       employee_list: [],
-      jobPosition:""
+      jobPosition:"",
+      page:1
     };
+  },
+  watch:{
+    page:function(val){
+      this.page = val;
+      axios.get("https://testing-api-mock.herokuapp.com/users?size=1?page="+this.page)  
+      .then((data)=>{
+        console.log(data);
+      })
+    }
   },
   methods: {
     deleteAll() {
@@ -80,9 +83,12 @@ export default {
       })
     }
   },
+  watch:{
+    
+  },
   mounted() {
     axios
-      .get("https://testing-api-mock.herokuapp.com/users?page=1?size=1")
+      .get("https://testing-api-mock.herokuapp.com/users?size=1?page=1")
       .then((res) => {
         console.log(res.data.results);
         return res.data.results;
